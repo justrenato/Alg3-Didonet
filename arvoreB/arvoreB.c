@@ -22,26 +22,25 @@ tipoNo *criaNo(int chave){
 }
 
 void criaArvore(int chaveRaiz, tipoNo *raiz){
-
-	raiz = malloc(sizeof(tipoNo));
-
+	// raiz = malloc(sizeof(tipoNo)); (ta bugando o codigo e fazendo sair da função com valor 0 na chave)
 	raiz->chave = chaveRaiz;
 	raiz->esq = NULL;
 	raiz->dir = NULL;
 
 	#ifdef debug
-		printf("Criei arvore\n");
+		printf("CriaArvore: Criei arvore com raiz: %d\n", raiz->chave);
 	#endif
 }
 
 void inclui(int chave, tipoNo *noRaiz){
-	tipoNo *noAtual = noRaiz;
-		printf("nova Chave %d\n",chave);
-		printf("atual-chave %d\n",noRaiz->chave);
-	if (chave <= noAtual->chave){
-		printf("to aqui\n");
-		noAtual = noAtual->esq;
-	} 
+	// tipoNo *noAtual = noRaiz;
+	// printf("chave atual %d\n",noAtual->chave);
+	// tipoNo teste;
+	// noRaiz->esq = teste;
+	// if (chave <= noAtual->chave){
+	// 	printf("to aqui\n");
+	// 	noAtual = noRaiz->esq;
+	// } 
 	// else {
 	// 	noAtual = noAtual->dir;
 	// }
@@ -59,7 +58,6 @@ int main(int argc, char const *argv[])
 
 	printf("Digite a primeira chave: \n");
 	scanf("%d",&chave);
-	printf("Primeira chave: %d\n",chave);
 
 	criaArvore(chave, &raiz);
 
