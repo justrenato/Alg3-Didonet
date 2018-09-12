@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct {
+typedef struct tipoNo{
 	int chave;
 	struct tipoNo *dir;
 	struct tipoNo *esq;
-	
 }tipoNo;
  
 tipoNo *criaNo(int chave){
@@ -28,23 +27,29 @@ void criaArvore(int chaveRaiz, tipoNo *raiz){
 	raiz->dir = NULL;
 
 	#ifdef debug
-		printf("CriaArvore: Criei arvore com raiz: %d\n", raiz->chave);
+		printf("Criei arvore com raiz: %d\n", raiz->chave);
 	#endif
 }
 
 void inclui(int chave, tipoNo *noRaiz){
-	// tipoNo *noAtual = noRaiz;
-	// printf("chave atual %d\n",noAtual->chave);
-	// tipoNo teste;
-	// noRaiz->esq = teste;
-	// if (chave <= noAtual->chave){
-	// 	printf("to aqui\n");
-	// 	noAtual = noRaiz->esq;
-	// } 
-	// else {
-	// 	noAtual = noAtual->dir;
-	// }
-
+	tipoNo *noAtual;
+	noAtual = noRaiz;
+	if (noRaiz==NULL)
+	{
+		noRaiz = malloc(sizeof(tipoNo));
+		noRaiz->chave = chave;
+		noRaiz->esq = NULL;
+		noRaiz->dir = NULL;
+		printf("inseri chave %d\n",noRaiz->chave );
+	}
+	else {
+		if (chave < noRaiz->chave){
+			inclui(chave,noRaiz->esq );
+		} 
+		else {
+			inclui(chave,noRaiz->dir );
+		}
+	}
 
 	#ifdef debug
 		printf("inclui no\n");
@@ -56,12 +61,12 @@ int main(int argc, char const *argv[])
 {
 	int chave;
 
-	printf("Digite a primeira chave: \n");
+	printf("Digite a raiz: \n");
 	scanf("%d",&chave);
 
 	criaArvore(chave, &raiz);
 
-	printf("Digite a segunda chave: \n");
+	printf("Digite a nova chave: \n");
 	scanf("%d",&chave);
 
 	inclui(chave,&raiz);
