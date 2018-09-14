@@ -14,7 +14,7 @@ tipoNo *criaNo(int chave){
 	no->esq = NULL;
 
 	#ifdef debug
-		printf("Criei no\n");
+		printf("Criei no com chave %d\n", no->chave);
 	#endif
 	
 	return no;
@@ -38,7 +38,9 @@ void inclui(int chave, tipoNo *noAtual){
 		noAtual->chave = chave;
 		noAtual->esq = NULL;
 		noAtual->dir = NULL;
-		printf("inseri chave %d\n",noAtual->chave );
+		#ifdef debug
+			printf("inseri chave %d\n",noAtual->chave );
+		#endif
 	}
 	else {
 		if (chave < noAtual->chave){
@@ -48,31 +50,15 @@ void inclui(int chave, tipoNo *noAtual){
 			inclui(chave,noAtual->dir );
 		}
 	}
-
-	#ifdef debug
-		printf("inclui no\n");
-	#endif
 }
 
-void imprimir( tipoNo *noRaiz){
-	// if ((noRaiz->esq == NULL) && (noRaiz->dir == NULL))
-	// {
-	// 	printf(" %d ",noRaiz->chave );
-	// }
-	// if (noRaiz->esq !=NULL)
-	// {
-	// 	imprimir(noRaiz->esq);
-	// }
-	// else{
-	// 	printf(" %d ",noRaiz->chave );
-	// }
-	// if (noRaiz->dir!=NULL){
-	// 	imprimir(noRaiz->dir);
-	// }
-	// else{
-	// 	printf(" %d ",noRaiz->chave );
-	// }
-	// printf("\n");
+void imprimirEmOrdem( tipoNo *noRaiz){
+	if (noRaiz!=NULL)
+	{
+		imprimirEmOrdem(noRaiz->esq);
+		printf(" %d ",noRaiz->chave );
+		imprimirEmOrdem(noRaiz->dir);
+	}
 }
 
 
@@ -87,16 +73,17 @@ int main(int argc, char const *argv[])
 	criaArvore(chave, &raiz);
 
 	int continuar;
-	printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
+	// printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
 	scanf("%d",&continuar);
 	while (continuar){
-		printf("Digite a nova chave: \n");
+		// printf("Digite a nova chave: \n");
 		scanf("%d",&chave);
 		inclui(chave,&raiz);
-		printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
+		// printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
 		scanf("%d",&continuar);
 	}
-	imprimir(&raiz);
-
+	printf("\nimpressao da arvore:\n");
+	imprimirEmOrdem(&raiz);
+	printf("\n");
 	return 0;
 }
