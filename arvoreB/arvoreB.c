@@ -6,48 +6,35 @@ typedef struct tipoNo{
 	struct tipoNo *esq;
 }tipoNo;
  
-tipoNo *criaNo(int chave){
-	tipoNo *no;
-	no = malloc (sizeof (tipoNo));
-	no->chave = chave;
-	no->dir = NULL;
-	no->esq = NULL;
-
-	#ifdef debug
-		printf("Criei no com chave %d\n", no->chave);
-	#endif
-	
-	return no;
-}
-
-void criaArvore(int chaveRaiz, tipoNo *raiz){
+void criaArvore(int chaveRaiz, tipoNo **raiz){
 	// raiz = malloc(sizeof(tipoNo)); (ta bugando o codigo e fazendo sair da função com valor 0 na chave)
-	raiz->chave = chaveRaiz;
-	raiz->esq = NULL;
-	raiz->dir = NULL;
+	(*raiz) = (tipoNo*)(malloc (sizeof(tipoNo)));
+	(*raiz)->chave = chaveRaiz;
+	(*raiz)->esq = NULL;
+	(*raiz)->dir = NULL;
 
 	#ifdef debug
-		printf("Criei arvore com raiz: %d\n", raiz->chave);
+		printf("Criei arvore com raiz: %d\n", (*raiz)->chave);
 	#endif
 }
 
-void inclui(int chave, tipoNo *noAtual){
-	if (noAtual==NULL)
+void inclui(int chave, tipoNo **noAtual){
+	if (*noAtual==NULL)
 	{
-		noAtual = malloc(sizeof(tipoNo));
-		noAtual->chave = chave;
-		noAtual->esq = NULL;
-		noAtual->dir = NULL;
+		(*noAtual) = (tipoNo *) malloc(sizeof(tipoNo));
+		(*noAtual)->chave = chave;
+		(*noAtual)->esq = NULL;
+		(*noAtual)->dir = NULL;
 		#ifdef debug
-			printf("inseri chave %d\n",noAtual->chave );
+			printf("inseri chave %d\n",(*noAtual)->chave );
 		#endif
 	}
 	else {
-		if (chave < noAtual->chave){
-			inclui(chave,noAtual->esq );
+		if (chave <= (*noAtual)->chave){
+			inclui(chave,&((*noAtual)->esq) );
 		} 
 		else {
-			inclui(chave,noAtual->dir );
+			inclui(chave,&((*noAtual)->dir) );
 		}
 	}
 }
@@ -61,8 +48,23 @@ void imprimirEmOrdem( tipoNo *noRaiz){
 	}
 }
 
+int altura(tipoNo *noRaiz){
+	int ae, ad;
+	if (noRaiz==NULL){
+		return 0;
+	}
+	ae = altura(noRaiz->esq);
+	ad = altura(noRaiz->dir);
 
-tipoNo raiz;
+	if (ae>ae)
+	{
+		return ae+1;
+	}
+	else
+		return ad+1;
+}
+
+tipoNo *raiz;
 int main(int argc, char const *argv[])
 {
 	int chave;
@@ -73,17 +75,20 @@ int main(int argc, char const *argv[])
 	criaArvore(chave, &raiz);
 
 	int continuar;
-	// printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
+	printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
 	scanf("%d",&continuar);
 	while (continuar){
-		// printf("Digite a nova chave: \n");
+		printf("Digite a nova chave: \n");
 		scanf("%d",&chave);
 		inclui(chave,&raiz);
-		// printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
+		printf("Deseja inserir mais nós? 1-Sim 0-Não : ");
 		scanf("%d",&continuar);
 	}
 	printf("\nimpressao da arvore:\n");
-	imprimirEmOrdem(&raiz);
+	imprimirEmOrdem(raiz);
 	printf("\n");
+
+	printf("altura: %d\n", altura(raiz));
+
 	return 0;
 }
