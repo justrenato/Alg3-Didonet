@@ -138,6 +138,39 @@ tipoNo *antecessor(tipoNo *noAtual, int passagem){
 	}
 }
 
+
+// int alturaExecRecur(tipoNo *raiz){
+// 	int ae,ad;
+// 	if (raiz == NULL)
+// 	{
+// 		return 0;
+// 	}
+// 	ae = alturaExecRecur(raiz->esq);
+// 	ad = alturaExecRecur(raiz->dir);
+// 	if (ae>ad)
+// 	{
+// 		return ae+=1;
+// 	}
+// 	 else
+// 	{
+// 		return ad+=1;
+// 	}
+// }
+
+void rotEsq(tipoNo **raiz){
+	if ((*raiz)->dir->esq == NULL)
+	{
+		(*raiz)->dir->esq = (*raiz);
+		(*raiz)->dir ==NULL;
+	}
+	else{
+		tipoNo *aux = (*raiz)->dir->esq;
+		(*raiz)->dir->esq = (*raiz);
+		(*raiz)->dir ==aux;
+
+	}
+}
+
 tipoNo *raiz;
 int main(int argc, char const *argv[])
 {
@@ -167,28 +200,28 @@ int main(int argc, char const *argv[])
 	imprimirEmOrdem(raiz);
 	printf("\n");
 //altura
-	printf("altura: %d\n", altura(raiz));
+// 	printf("altura: %d\n", altura(raiz));
 
-//busca
-	printf("voce deseja buscar algum valor?\n");
-	scanf("%d",&buscar);
-	tipoNo *buscado;
-	while(buscar){
-		printf("voce deseja buscar qual valor?\n");
-		scanf("%d",&valor);
-		printf("Digite 1 para buscar em ordem - 2 pré ordem - 3 pós ordem\n");
-		scanf("%d",&trajeto);
+// //busca
+// 	printf("voce deseja buscar algum valor?\n");
+// 	scanf("%d",&buscar);
+// 	tipoNo *buscado;
+// 	while(buscar){
+// 		printf("voce deseja buscar qual valor?\n");
+// 		scanf("%d",&valor);
+// 		printf("Digite 1 para buscar em ordem - 2 pré ordem - 3 pós ordem\n");
+// 		scanf("%d",&trajeto);
 
-		// *buscado = *busca(raiz, trajeto,valor);
-		if (buscado!=NULL){
-			printf("valor %d encontrado\n",buscado->chave );
-		}else{
-			printf("valor nao encontrado\n");
-		}
+// 		// *buscado = *busca(raiz, trajeto,valor);
+// 		if (buscado!=NULL){
+// 			printf("valor %d encontrado\n",buscado->chave );
+// 		}else{
+// 			printf("valor nao encontrado\n");
+// 		}
 
-		printf("deseja buscar mais algum valor? 1-sim 0-nao:\n");
-		scanf("%d",&buscar);
-	}
+// 		printf("deseja buscar mais algum valor? 1-sim 0-nao:\n");
+// 		scanf("%d",&buscar);
+// 	}
 
 	// int passagem = 0;
 	// tipoNo *ant = antecessor(buscado,passagem);
@@ -198,6 +231,9 @@ int main(int argc, char const *argv[])
 	// }else{
 	// 	printf("não ha antecessor\n");
 	// }	
-
+	printf("altura: %d \n",altura(raiz) );
+	puts("rotaçao esq:\n");
+	rotEsq(&raiz);
+	printf("altura: %d \n",altura(raiz) );
 	return 0;
 }
