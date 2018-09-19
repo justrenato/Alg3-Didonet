@@ -120,22 +120,31 @@ tipoNo *busca(tipoNo *raiz, int trajeto, int valor){
 		}
 	}
 }
+tipoNo *minimo(tipoNo *noAtual){
+	if (noAtual->esq == NULL)
+	{
+		return NULL;
+	}
+	else {
+		minimo(noAtual->esq);
+	}
+}
+tipoNo *maximo(tipoNo *noAtual){
+	if (noAtual->dir == NULL)
+	{
+		return NULL;
+	}
+	else {
+		maximo(noAtual->dir);
+	}
+}
 
 tipoNo *antecessor(tipoNo *noAtual, int passagem){
-	if (passagem == 0){
-		if (noAtual->esq == NULL){
-			return NULL;
-		} else{
-			return antecessor(noAtual->esq, passagem+1);
-		}
-	}else{
-		if (noAtual->dir==NULL)
-		{
-			return noAtual;
-		} else{
-			return antecessor(noAtual->dir, passagem+1);
-		}
-	}
+	if (noAtual->esq != NULL)
+	{
+		return maximo(noAtual->esq);
+	} 
+	//else{} caso o antecessor seja o pai omg
 }
 
 
@@ -157,18 +166,22 @@ tipoNo *antecessor(tipoNo *noAtual, int passagem){
 // 	}
 // }
 
-void rotEsq(tipoNo **raiz){
-	if ((*raiz)->dir->esq == NULL)
-	{
-		(*raiz)->dir->esq = (*raiz);
-		(*raiz)->dir ==NULL;
-	}
-	else{
-		tipoNo *aux = (*raiz)->dir->esq;
-		(*raiz)->dir->esq = (*raiz);
-		(*raiz)->dir ==aux;
+void rotDir(tipoNo **raiz){
+	tipoNo *aux;
+	aux = (*raiz)->esq;
+	(*raiz)->esq = aux->dir;
+	aux->dir = (*raiz);
+	// if ((*raiz)->dir->esq == NULL)
+	// {
+	// 	(*raiz)->dir->esq = (*raiz);
+	// 	(*raiz)->dir ==NULL;
+	// }
+	// else{
+	// 	tipoNo *aux = (*raiz)->dir->esq;
+	// 	(*raiz)->dir->esq = (*raiz);
+	// 	(*raiz)->dir ==aux;
 
-	}
+	// }
 }
 
 tipoNo *raiz;
@@ -233,7 +246,7 @@ int main(int argc, char const *argv[])
 	// }	
 	printf("altura: %d \n",altura(raiz) );
 	puts("rotaçao esq:\n");
-	rotEsq(&raiz);
+	rotDir(&raiz);
 	printf("altura: %d \n",altura(raiz) );
 	return 0;
 }
