@@ -1,6 +1,7 @@
 all: exec
 
 exec: arvoreB.c
+	clear
 	gcc arvoreB.c -o busca -g
 	
 clean:
