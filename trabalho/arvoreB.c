@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-// typedef struct tipoNoB
-// {
-// 	struct tipoNoB *esq;
-// 	struct tipoNoB *dir;
-// 	int chave;
-// }tipoNoB;
+// #include "arvoreB.h"
+
+
+#define FILHOESQ (*noAtual)->esq
+#define FILHODIR (*noAtual)->dir
+#define PAI (*noAtual)->pai
+#define CHAVE (*noAtual)->chave
+#define UNICOFILHODIR ((FILHODIR != NULL) && (FILHOESQ==NULL))
+#define UNICOFILHOESQ ((FILHODIR == NULL) && (FILHOESQ!=NULL))
 
 typedef struct tipoNoA
 {
@@ -15,19 +18,18 @@ typedef struct tipoNoA
 	int chave;
 	// struct tipoNoB *chave;
 }tipoNoA;
- 
-void criaArvoreA(int chave, tipoNoA **raiz, int argc, tipoNoA *pai){
-	(*raiz) = (tipoNoA*)(malloc (sizeof(tipoNoA)));
-	(*raiz)->pai = pai;
-	(*raiz)->esq = NULL;
-	(*raiz)->dir = NULL;
-	(*raiz)->chave = chave;
+
+void criaArvoreA(int chave, tipoNoA **noAtual, int argc, tipoNoA *pai){
+	(*noAtual) = (tipoNoA*)(malloc (sizeof(tipoNoA)));
+	PAI = pai;
+	FILHOESQ = NULL;
+	FILHODIR = NULL;
+	CHAVE = chave;
 
 	// if (argc > 1){
-		printf("Criei arvore com nó: %d\n", (*raiz)->chave);
+		printf("Criei arvore com nó: %d\n", CHAVE);
 	// }
 }
-
 void inclui(int chave, tipoNoA **noAtual, int argc, tipoNoA *pai){
 	if (*noAtual==NULL)
 	{
@@ -35,68 +37,64 @@ void inclui(int chave, tipoNoA **noAtual, int argc, tipoNoA *pai){
 
 		// if (argc > 1)
 		// {
-			printf("inseri chave %d\n",(*noAtual)->chave );
-			printf("pai: %d\n",(*noAtual)->pai->chave);
+			printf("inseri chave %d\n",CHAVE );
+			printf("pai: %d\n",PAI->chave);
 		// }
 
 	}
 	else {
-		if (chave <= (*noAtual)->chave){
-			inclui(chave,&((*noAtual)->esq),argc , (*noAtual));
+		if (chave <= CHAVE){
+			inclui(chave,&(FILHOESQ),argc , (*noAtual));
 		} 
 		else {
-			inclui(chave,&((*noAtual)->dir), argc,(*noAtual));
+			inclui(chave,&(FILHODIR), argc,(*noAtual));
 		}
 	}
 }
-
-void imprimirEmOrdem( tipoNoA *noRaiz){
-	if (noRaiz!=NULL)
+void imprimirEmOrdem( tipoNoA *noAtual){
+	if (noAtual!=NULL)
 	{
-		imprimirEmOrdem(noRaiz->esq);
-		printf(" %d ",noRaiz->chave );
-		imprimirEmOrdem(noRaiz->dir);
+		imprimirEmOrdem(noAtual->esq);
+		printf(" %d ",noAtual->chave );
+		imprimirEmOrdem(noAtual->dir);
 	}
 }
-
-int altura(tipoNoA *noRaiz){
+int altura(tipoNoA *noAtual){
 	int ae, ad;
-	if (noRaiz==NULL){
-		return 1;
+	if (noAtual==NULL){
+		return 0;
 	}
-	ae = altura(noRaiz->esq);
-	ad = altura(noRaiz->dir);
+	ae = altura(noAtual->esq);
+	ad = altura(noAtual->dir);
 
-	if (ae>ae)
+	if (ae>ad)
 	{
 		return ae+1;
 	}
 	else
 		return ad+1;
 }
-
-tipoNoA *busca(tipoNoA *raiz, int valor){
+tipoNoA *busca(tipoNoA *noAtual, int valor){
 	tipoNoA *encontrado;
-	if (raiz==NULL)	
+	if (noAtual==NULL)	
 	{
 		return NULL;
-	}
-	if (valor < raiz->chave)
+	}else
+	if (valor < noAtual->chave)
 	{
-		printf("valor percorrido: %d\n",raiz->chave );
-		encontrado = busca(raiz->esq, valor);
+		printf("valor percorrido: %d\n",noAtual->chave );
+		encontrado = busca(noAtual->esq, valor);
+		return encontrado;
+	} else
+	if (noAtual->chave == valor)
+	{
+		return noAtual;
+	} else
+	if (valor > noAtual->chave){
+		printf("valor percorrido: %d\n",noAtual->chave );
+		encontrado = busca(noAtual->dir,valor);
 		return encontrado;
 	}
-	if (raiz->chave == valor)
-	{
-		return raiz;
-	}
-	if (valor > raiz->chave){
-		printf("valor percorrido: %d\n",raiz->chave );
-		encontrado = busca(raiz->dir,valor);
-		return encontrado;
-	}
-
 }
 tipoNoA *minimo(tipoNoA *noAtual){
 	if (noAtual->esq == NULL)
@@ -116,7 +114,6 @@ tipoNoA *maximo(tipoNoA *noAtual){
 		maximo(noAtual->dir);
 	}
 }
-
 tipoNoA *antecessor(tipoNoA *noAtual){
 	if (noAtual->esq != NULL)
 	{
@@ -133,34 +130,86 @@ tipoNoA *sucessor(tipoNoA *noAtual){
 		return NULL;
 	}
 }
-
 tipoNoA exclusao(tipoNoA **noAtual){
 	tipoNoA excluido, *aux;
-	if (((*noAtual)->dir == NULL) && ((*noAtual)->esq==NULL)) //se for nó folha
+	if ((FILHODIR == NULL) && (FILHOESQ==NULL)) //se for nó folha
 	{
-		if ((*noAtual)->chave <= (*noAtual)->pai->chave) //se for filho da esquerda
+		if (CHAVE <= PAI->chave) //se for filho da esquerda
 		{
-			excluido = *(*noAtual)->pai->esq; //salvando valor para indicar qual nó foi excluido
-			aux = (*noAtual)->pai; //aponta para o pai para poder liberar memoria e apontar para NULL
-			free((*noAtual)->pai->esq); //libera memoria 
+			excluido = *PAI->esq; //salvando valor para indicar qual nó foi excluido
+			aux = PAI; //aponta para o pai para poder liberar memoria e apontar para NULL
+			free(PAI->esq); //libera memoria 
 			aux->esq = NULL; //aponta para null
 			return excluido; //retorna o nó excluido
 		} else { //se for filho da direita
-			excluido = *(*noAtual)->pai->dir;
-			aux = (*noAtual)->pai;
-			free((*noAtual)->pai->dir);
+			excluido = *PAI->dir;
+			aux = PAI;
+			free(PAI->dir);
 			aux->dir = NULL;
 			return excluido;
 		}
 	}
-	else if (((*noAtual)->dir != NULL) && ((*noAtual)->esq==NULL) || //se tiver um filho
-			((*noAtual)->dir == NULL) && ((*noAtual)->esq!=NULL))
+	else if (UNICOFILHOESQ || UNICOFILHODIR)//se tiver um filho
 	{
-	}
-	else if (((*noAtual)->dir != NULL) && ((*noAtual)->esq!=NULL)) // se tiver dois filhos
-	{
-	}
+		if (UNICOFILHOESQ) //se o unico filho for o da esquerda
+		{
+			if (PAI->chave <= (*noAtual)->chave) //se NO excluido for filho da direita	
+			{
+				aux = *noAtual;
+				excluido = *(*noAtual);
+				PAI->dir = aux->esq;
+				aux->esq->pai = aux->pai;
+				free(*noAtual);
+				return excluido;
+			} 
+			else {
+				aux = *noAtual;
+				excluido = *(*noAtual);
+				PAI->esq = aux->esq;
+				aux->esq->pai = aux->pai;
+				free(*noAtual);
+				return excluido;
+			}
+		} else { // se o unico filho for o da direita
+			if (PAI->chave > (*noAtual)->chave) //se NO excluido for filho da esquerda	
+			{
+				aux = *noAtual;
+				excluido = *(*noAtual);
+				PAI->esq = aux->esq;
+				aux->esq->pai = aux->pai;
+				free(*noAtual);
+				return excluido;
+			} 
+			else {  //se NO excluido for filho da direita	
+				aux = *noAtual;
+				excluido = *(*noAtual);
+				PAI->dir = aux->esq;
+				aux->esq->pai = aux->pai;
+				free(*noAtual);
+				return excluido;
+			}
+		}
 
+	}
+	else if ((FILHODIR != NULL) && (FILHOESQ!=NULL)) // se tiver dois filhos
+	{
+		excluido = *(*noAtual);
+		printf("antecessor do nó %d: %d\n",(*noAtual)->chave, (antecessor (*noAtual))->chave);
+		aux = antecessor ((*noAtual));
+		if ((*noAtual)->pai !=NULL)
+		{
+			printf("\n\n\n\n\n\nponteiro esq do pai: %d\n",(*noAtual)->pai->esq->chave );
+			(*noAtual)->pai->esq = aux;
+			aux->pai = (*noAtual)->pai;
+			aux->pai->dir = NULL;
+			aux->esq = (*noAtual)->esq;
+			aux->dir = (*noAtual)->dir;
+			// free(*noAtual);
+		} else{
+			
+		}
+		return excluido;
+	}
 }
 
 tipoNoA *raiz;
@@ -174,7 +223,6 @@ int main(int argc, char const *argv[])
 	int buscar;
 
 //criação da arvore
-
 	// if (argc>1)
 	// {
 		printf("Digite a raiz: \n");
@@ -225,7 +273,10 @@ int main(int argc, char const *argv[])
 	printf("antecessor da arvore: %d\n",(antecessor(raiz))->chave );
 	printf("sucessor da arvore: %d\n",(sucessor(raiz))->chave );
 
-	printf("nó excluido: %d\n",(exclusao(&(raiz)->esq->esq)).chave );;
-	printf("minimo da arvore: %d\n",(minimo(raiz))->chave );
+	printf("nó excluido: %d\n",(exclusao(&(raiz)->esq)).chave );;
+
+	printf("\nimpressao da arvore pós exclusão:\n");
+	imprimirEmOrdem(raiz);
+	printf("\n");
 	return 0;
 }
