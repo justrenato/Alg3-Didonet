@@ -191,22 +191,50 @@ tipoNoA exclusao(tipoNoA **noAtual){
 		}
 
 	}
-	else if ((FILHODIR != NULL) && (FILHOESQ!=NULL)) // se tiver dois filhos
+	else if ((FILHODIR != NULL) && (FILHOESQ!=NULL)) // se tiver dois filhos (escolhi trocar pelo antecessor e nao pelo sucessor)
 	{
 		excluido = *(*noAtual);
-		printf("antecessor do nó %d: %d\n",(*noAtual)->chave, (antecessor (*noAtual))->chave);
 		aux = antecessor ((*noAtual));
 		if ((*noAtual)->pai !=NULL)
 		{
-			printf("\n\n\n\n\n\nponteiro esq do pai: %d\n",(*noAtual)->pai->esq->chave );
-			(*noAtual)->pai->esq = aux;
-			aux->pai = (*noAtual)->pai;
-			aux->pai->dir = NULL;
-			aux->esq = (*noAtual)->esq;
-			aux->dir = (*noAtual)->dir;
+			printf("\n");
+			if ((*noAtual)->esq == aux) // caso antecessor seja filho direto
+			{
+				aux->dir = (*noAtual)->dir;
+				printf(" \npré atribuição\n");
+				printf("noatual %d\n",((*noAtual)->chave) );
+				printf("noatual pai  %d\n",((*noAtual)->pai->chave) );
+				printf("noatual pai dir %d\n",((*noAtual)->pai->dir->chave) );
+				printf("aux %d\n", aux->chave);
+				(*noAtual)->pai->dir = aux;
+				printf(" \npós atribuição\n");
+				printf("noatual %d\n",((*noAtual)->chave) );
+				printf("noatual pai  %d\n",((*noAtual)->pai->chave) );
+				printf("noatual pai dir %d\n",((*noAtual)->pai->dir->chave) );
+				printf("aux %d\n", aux->chave);
+
+				printf("aux dir: %d\n",aux->dir->chave );
+			} else {
+				aux->pai->dir = NULL;
+				aux->pai->esq = aux;////////////////////
+			}
+			aux->pai = (*noAtual)->pai; 
+			// (*noAtual)->esq->pai = aux;
+			// aux->esq = (*noAtual)->esq;
+			// (*noAtual)->dir->pai = aux;
+			// aux->dir = (*noAtual)->dir;
+			// free(*noAtual);
+
+			// aux->esq = (*noAtual)->esq;
+			// (*noAtual)->esq->dir = NULL;
+			// aux->dir = (*noAtual)->dir;
+			// (*noAtual)->pai->esq = aux;
+			// aux->pai = (*noAtual)->pai;
+			// (*noAtual)->esq->pai = aux;
+			// aux->dir->pai = aux;
 			// free(*noAtual);
 		} else{
-			
+			//vou fazer ainda
 		}
 		return excluido;
 	}
@@ -273,7 +301,7 @@ int main(int argc, char const *argv[])
 	printf("antecessor da arvore: %d\n",(antecessor(raiz))->chave );
 	printf("sucessor da arvore: %d\n",(sucessor(raiz))->chave );
 
-	printf("nó excluido: %d\n",(exclusao(&(raiz)->esq)).chave );;
+	printf("nó excluido: %d\n",(exclusao(&(raiz)->esq->dir)).chave );;
 
 	printf("\nimpressao da arvore pós exclusão:\n");
 	imprimirEmOrdem(raiz);

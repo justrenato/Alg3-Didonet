@@ -1,5 +1,5 @@
-all: busca
-	gcc arvoreB.c -o busca
+all: arvoreB.c
+	gcc arvoreB.c -o busca -g
 
 # busca: arvoreB.o funcs.o
 # 	gcc arvoreB.o funcs.o -o busca -g -Wall
