@@ -3,12 +3,14 @@
 // #include "arvoreB.h"
 
 
+#define FILHOESQ2 (noAtual)->esq
+#define FILHODIR2 (noAtual)->dir
 #define FILHOESQ (*noAtual)->esq
 #define FILHODIR (*noAtual)->dir
 #define PAI (*noAtual)->pai
 #define CHAVE (*noAtual)->chave
-#define UNICOFILHODIR ((FILHODIR != NULL) && (FILHOESQ==NULL))
-#define UNICOFILHOESQ ((FILHODIR == NULL) && (FILHOESQ!=NULL))
+#define UNICOFILHODIR ((FILHODIR2 != NULL) && (FILHOESQ2==NULL))
+#define UNICOFILHOESQ ((FILHODIR2 == NULL) && (FILHOESQ2!=NULL))
 
 typedef struct tipoNoA
 {
@@ -130,21 +132,21 @@ tipoNoA *sucessor(tipoNoA *noAtual){
 		return NULL;
 	}
 }
-tipoNoA exclusao(tipoNoA **noAtual){
+tipoNoA exclusao(tipoNoA *noAtual){
 	tipoNoA excluido, *aux;
-	if ((FILHODIR == NULL) && (FILHOESQ==NULL)) //se for nó folha
+	if ((FILHODIR2 == NULL) && (FILHOESQ2==NULL)) //se for nó folha
 	{
-		if (CHAVE <= PAI->chave) //se for filho da esquerda
+		if (noAtual->chave <= noAtual->pai->chave) //se for filho da esquerda
 		{
-			excluido = *PAI->esq; //salvando valor para indicar qual nó foi excluido
-			aux = PAI; //aponta para o pai para poder liberar memoria e apontar para NULL
-			free(PAI->esq); //libera memoria 
+			excluido = *noAtual->pai->esq; //salvando valor para indicar qual nó foi excluido
+			aux = noAtual->pai; //aponta para o pai para poder liberar memoria e apontar para NULL
+			free(noAtual->pai->esq); //libera memoria 
 			aux->esq = NULL; //aponta para null
 			return excluido; //retorna o nó excluido
 		} else { //se for filho da direita
-			excluido = *PAI->dir;
-			aux = PAI;
-			free(PAI->dir);
+			excluido = *noAtual->pai->dir;
+			aux = noAtual->pai;
+			free(noAtual->pai->dir);
 			aux->dir = NULL;
 			return excluido;
 		}
@@ -153,64 +155,64 @@ tipoNoA exclusao(tipoNoA **noAtual){
 	{
 		if (UNICOFILHOESQ) //se o unico filho for o da esquerda
 		{
-			if (PAI->chave <= (*noAtual)->chave) //se NO excluido for filho da direita	
+			if (noAtual->pai->chave <= (noAtual)->chave) //se NO excluido for filho da direita	
 			{
-				aux = *noAtual;
-				excluido = *(*noAtual);
-				PAI->dir = aux->esq;
+				aux = noAtual;
+				excluido = *(noAtual);
+				noAtual->pai->dir = aux->esq;
 				aux->esq->pai = aux->pai;
-				free(*noAtual);
+				free(noAtual);
 				return excluido;
 			} 
 			else {
-				aux = *noAtual;
-				excluido = *(*noAtual);
-				PAI->esq = aux->esq;
+				aux = noAtual;
+				excluido = *(noAtual);
+				noAtual->pai->esq = aux->esq;
 				aux->esq->pai = aux->pai;
-				free(*noAtual);
+				free(noAtual);
 				return excluido;
 			}
 		} else { // se o unico filho for o da direita
-			if (PAI->chave > (*noAtual)->chave) //se NO excluido for filho da esquerda	
+			if (noAtual->pai->chave > (noAtual)->chave) //se NO excluido for filho da esquerda	
 			{
-				aux = *noAtual;
-				excluido = *(*noAtual);
-				PAI->esq = aux->esq;
+				aux = noAtual;
+				excluido = *(noAtual);
+				noAtual->pai->esq = aux->esq;
 				aux->esq->pai = aux->pai;
-				free(*noAtual);
+				free(noAtual);
 				return excluido;
 			} 
 			else {  //se NO excluido for filho da direita	
-				aux = *noAtual;
-				excluido = *(*noAtual);
-				PAI->dir = aux->esq;
+				aux = noAtual;
+				excluido = *(noAtual);
+				noAtual->pai->dir = aux->esq;
 				aux->esq->pai = aux->pai;
-				free(*noAtual);
+				free(noAtual);
 				return excluido;
 			}
 		}
 
 	}
-	else if ((FILHODIR != NULL) && (FILHOESQ!=NULL)) // se tiver dois filhos (escolhi trocar pelo antecessor e nao pelo sucessor)
+	else if ((FILHODIR2 != NULL) && (FILHOESQ2!=NULL)) // se tiver dois filhos (escolhi trocar pelo antecessor e nao pelo sucessor)
 	{
-		excluido = *(*noAtual);
-		aux = antecessor ((*noAtual));
-		if ((*noAtual)->pai !=NULL)
+		excluido = *(noAtual);
+		aux = antecessor ((noAtual));
+		if ((noAtual)->pai !=NULL)
 		{
 			printf("\n");
-			if ((*noAtual)->esq == aux) // caso antecessor seja filho direto
+			if ((noAtual)->esq == aux) // caso antecessor seja filho direto
 			{
-				aux->dir = (*noAtual)->dir;
+				aux->dir = (noAtual)->dir;
 				printf(" \npré atribuição\n");
-				printf("noatual %d\n",((*noAtual)->chave) );
-				printf("noatual pai  %d\n",((*noAtual)->pai->chave) );
-				printf("noatual pai dir %d\n",((*noAtual)->pai->dir->chave) );
+				printf("noatual %d\n",((noAtual)->chave) );
+				printf("noatual pai  %d\n",((noAtual)->pai->chave) );
+				printf("noatual pai dir %d\n",((noAtual)->pai->dir->chave) );
 				printf("aux %d\n", aux->chave);
-				(*noAtual)->pai->dir = aux;
+				(noAtual)->pai->dir = aux;
 				printf(" \npós atribuição\n");
-				printf("noatual %d\n",((*noAtual)->chave) );
-				printf("noatual pai  %d\n",((*noAtual)->pai->chave) );
-				printf("noatual pai dir %d\n",((*noAtual)->pai->dir->chave) );
+				printf("noatual %d\n",((noAtual)->chave) );
+				printf("noatual pai  %d\n",((noAtual)->pai->chave) );
+				printf("noatual pai dir %d\n",((noAtual)->pai->dir->chave) );
 				printf("aux %d\n", aux->chave);
 
 				printf("aux dir: %d\n",aux->dir->chave );
@@ -218,7 +220,7 @@ tipoNoA exclusao(tipoNoA **noAtual){
 				aux->pai->dir = NULL;
 				aux->pai->esq = aux;////////////////////
 			}
-			aux->pai = (*noAtual)->pai; 
+			aux->pai = (noAtual)->pai; 
 			// (*noAtual)->esq->pai = aux;
 			// aux->esq = (*noAtual)->esq;
 			// (*noAtual)->dir->pai = aux;
@@ -301,7 +303,7 @@ int main(int argc, char const *argv[])
 	printf("antecessor da arvore: %d\n",(antecessor(raiz))->chave );
 	printf("sucessor da arvore: %d\n",(sucessor(raiz))->chave );
 
-	printf("nó excluido: %d\n",(exclusao(&(raiz)->esq->dir)).chave );;
+	printf("nó excluido: %d\n",(exclusao((raiz)->esq->dir)).chave );;
 
 	printf("\nimpressao da arvore pós exclusão:\n");
 	imprimirEmOrdem(raiz);
