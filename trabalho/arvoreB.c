@@ -141,130 +141,11 @@ tipoNoA *sucessor(tipoNoA *noAtual){
 		return NULL;
 	}
 }
-tipoNoA exclusao2(tipoNoA *noAtual){
-	tipoNoA excluido, *aux;
-	if ((FILHODIR2 == NULL) && (FILHOESQ2==NULL)) //se for nó folha
-	{
-		if (noAtual->chave <= noAtual->pai->chave) //se for filho da esquerda
-		{
-			excluido = *noAtual->pai->esq; //salvando valor para indicar qual nó foi excluido
-			aux = noAtual->pai; //aponta para o pai para poder liberar memoria e apontar para NULL
-			free(noAtual->pai->esq); //libera memoria 
-			aux->esq = NULL; //aponta para null
-			return excluido; //retorna o nó excluido
-		} else { //se for filho da direita
-			excluido = *noAtual->pai->dir;
-			aux = noAtual->pai;
-			free(noAtual->pai->dir);
-			aux->dir = NULL;
-			return excluido;
-		}
-	}
-	else if (UNICOFILHOESQ || UNICOFILHODIR)//se tiver um filho
-	{
-		if (UNICOFILHOESQ) //se o unico filho for o da esquerda
-		{
-			if (noAtual->pai->chave <= (noAtual)->chave) //se NO excluido for filho da direita	
-			{
-				aux = noAtual;
-				excluido = *(noAtual);
-				noAtual->pai->dir = aux->esq;
-				aux->esq->pai = aux->pai;
-				free(noAtual);
-				return excluido;
-			} 
-			else {
-				aux = noAtual;
-				excluido = *(noAtual);
-				noAtual->pai->esq = aux->esq;
-				aux->esq->pai = aux->pai;
-				free(noAtual);
-				return excluido;
-			}
-		}
-		else { // se o unico filho for o da direita
-			if (noAtual->pai->chave > (noAtual)->chave) //se NO excluido for filho da esquerda	
-			{
-				aux = noAtual;
-				excluido = *(noAtual);
-				noAtual->pai->esq = aux->esq;
-				aux->esq->pai = aux->pai;
-				free(noAtual);
-				return excluido;
-			} 
-			else {  //se NO excluido for filho da direita	
-				aux = noAtual;
-				excluido = *(noAtual);
-				noAtual->pai->dir = aux->esq;
-				aux->esq->pai = aux->pai;
-				free(noAtual);
-				return excluido;
-			}
-		}
-
-	}
-	else if ((FILHODIR2 != NULL) && (FILHOESQ2!=NULL)) // se tiver dois filhos (escolhi trocar pelo antecessor e nao pelo sucessor)
-	{
-		excluido = *(noAtual);
-		aux = antecessor ((noAtual));
-		if ((noAtual)->pai !=NULL) //se não for exclusao da raiz
-		{
-			printf("\n");
-			if ((noAtual)->esq == aux) // caso antecessor seja filho direto
-			{
-				aux->dir = (noAtual)->dir;
-				noAtual->esq = NULL;
-				(noAtual)->pai->dir = aux;
-				aux->pai = noAtual->pai->dir;
-				aux->dir->pai = aux;
-				free(noAtual);
-				noAtual = NULL;
-				return excluido;
-			} else{ //caso antecessor não seja filho direto
-				aux->pai->dir = NULL;
-				aux->pai = noAtual->pai;
-				aux->pai->esq = aux;
-				noAtual->esq->pai=aux; 
-				aux->esq = noAtual->esq;
-				noAtual->dir->pai = aux;
-				aux->dir = noAtual->dir;
-				noAtual->dir=NULL;
-				noAtual->esq=NULL;
-				free(noAtual);
-				noAtual=NULL;
-				return excluido;
-			}
-		} else{ //exclusao da raiz
-			if ((noAtual)->esq == aux) //caso antecessor seja filho direto
-			{
-				aux->dir = noAtual->dir;
-				aux->dir->pai = aux;
-				aux->pai = NULL;
-				noAtual->dir = NULL;
-				noAtual->esq = NULL;
-				noAtual = aux;
-				noAtual = NULL;
-				free(noAtual);
-			} else{ //caso antecessor não seja filho direto
-				aux->pai->dir = NULL;
-				aux->pai = NULL;
-				noAtual->esq->pai = aux;
-				aux->esq = noAtual->esq;
-				noAtual->dir->pai = aux;
-				aux->dir = noAtual->dir;
-				free(noAtual);
-				noAtual=NULL;
-				return excluido;
-			}
-		}
-		return excluido;
-	}
-}
 
 void exclusao(tipoNoA **noAtual, int chave){
 	tipoNoA *aux, *excluido;
 	excluido = busca((*noAtual), chave);
-	//(*noAtual) = excluido; // DESSA FORMA MUDEI A RAIZ :o
+	//(*noAtual) = excluido; // DESSA FORMA CONSEGUI MUDAR A RAIZ :o
 	if (*noAtual == NULL)
 	{
 		printf("exclusão não foi possivel\n");
@@ -274,7 +155,11 @@ void exclusao(tipoNoA **noAtual, int chave){
 
 		if ((excluido->dir == NULL) && (excluido->esq==NULL)) //se for nó folha
 		{
-			if ((excluido)->chave <= (excluido)->pai->chave) //se for filho da esquerda
+			if (excluido->pai == NULL) //se for a raiz
+			{
+				free(*noAtual);
+				(*noAtual)== NULL;
+			}else if ((excluido)->chave <= (excluido)->pai->chave) //se for filho da esquerda
 			{
 				aux = (excluido)->pai; //aponta para o pai para poder liberar memoria e apontar para NULL
 				free(aux->esq); //libera memoria 
@@ -288,7 +173,19 @@ void exclusao(tipoNoA **noAtual, int chave){
 		else if ( ((excluido->esq != NULL) && (excluido->dir == NULL)) || 
 				  ((excluido->esq == NULL) && (excluido->dir != NULL)) )//se tiver um filho
 		{
-			if ((excluido->esq != NULL) && (excluido->dir == NULL)) //se o unico filho for o da esquerda
+			if (excluido->pai == NULL) // se for a raiz
+			{
+				if (excluido->esq != NULL)
+				{
+					excluido->esq->pai == NULL;
+					free(*noAtual);
+					(*noAtual)=aux;
+				} else{
+					excluido->dir->pai == NULL;
+					(*noAtual)=(*noAtual)->dir;
+					free(excluido);
+				}
+			}else if ((excluido->esq != NULL) && (excluido->dir == NULL)) //se o unico filho for o da esquerda
 			{
 				if (excluido->pai->chave <= (excluido)->chave) //se NO excluido for filho da direita	
 				{
