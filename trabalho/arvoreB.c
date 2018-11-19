@@ -14,10 +14,9 @@
 
 typedef struct tipoNoB
 {
-	int index;
+	int chave;
 	struct tipoNoB *esq;
 	struct tipoNoB *dir;
-	struct tipoNoB *indexB;
 }tipoNoB;
 
 typedef struct tipoNoA
@@ -58,12 +57,12 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 		(*noAtual) = (tipoNoB*)(malloc (sizeof(tipoNoB)));
 		(*noAtual)->esq = NULL;
 		(*noAtual)->dir = NULL;
-		(*noAtual)->index = index;
+		(*noAtual)->chave = index;
 		// printf("inseri index %d\n",(*noAtual)->index );
 		return (*noAtual);
 	}
 	else {
-		if (index <= (*noAtual)->index){
+		if (index <= (*noAtual)->chave){
 			incluiB(index,&((*noAtual)->esq));
 		} 
 		else {
@@ -76,7 +75,7 @@ void imprimirEmOrdemB( tipoNoB *noAtual){
 	if (noAtual!=NULL)
 	{
 		printf("(");
-		printf("%d",noAtual->index );
+		printf("%d",noAtual->chave );
 		if ((noAtual->esq == NULL) && (noAtual->dir != NULL))
 		{
 			printf("()");
@@ -115,7 +114,7 @@ int altura(tipoNoA *noAtual){
 	else
 		return ad+1;
 }
-tipoNoA *busca(tipoNoA *noAtual, int valor){
+tipoNoA *buscaA(tipoNoA *noAtual, int valor){
 	tipoNoA *encontrado;
 	if (noAtual==NULL)	
 	{
@@ -123,8 +122,8 @@ tipoNoA *busca(tipoNoA *noAtual, int valor){
 	}else
 	if (valor < noAtual->index)
 	{
-		printf("valor percorrido: %d\n",noAtual->index );
-		encontrado = busca(noAtual->esq, valor);
+		// printf("valor percorrido: %d\n",noAtual->index );
+		encontrado = buscaA(noAtual->esq, valor);
 		return encontrado;
 	} else
 	if (noAtual->index == valor)
@@ -132,8 +131,28 @@ tipoNoA *busca(tipoNoA *noAtual, int valor){
 		return noAtual;
 	} else
 	if (valor > noAtual->index){
-		printf("valor percorrido: %d\n",noAtual->index );
-		encontrado = busca(noAtual->dir,valor);
+		// printf("valor percorrido: %d\n",noAtual->index );
+		encontrado = buscaA(noAtual->dir,valor);
+		return encontrado;
+	}
+}
+tipoNoB *buscaB(tipoNoB *noAtual, int valor){
+	tipoNoB *encontrado;
+	if (noAtual==NULL)	
+	{
+		return NULL;
+	}else
+	if (valor < noAtual->chave)
+	{
+		encontrado = buscaB(noAtual->esq, valor);
+		return encontrado;
+	} else
+	if (noAtual->chave == valor)
+	{
+		return noAtual;
+	} else
+	if (valor > noAtual->chave){
+		encontrado = buscaB(noAtual->dir,valor);
 		return encontrado;
 	}
 }
@@ -171,9 +190,9 @@ tipoNoA *sucessor(tipoNoA *noAtual){
 		return NULL;
 	}
 }
-void exclusao(tipoNoA **noAtual, int index){
+void exclusaoA(tipoNoA **noAtual, int index){
 	tipoNoA *aux, *excluido;
-	excluido = busca((*noAtual), index);
+	excluido = buscaA((*noAtual), index);
 	//(*noAtual) = excluido; // DESSA FORMA CONSEGUI MUDAR A RAIZ :o
 	if (*noAtual == NULL)
 	{
@@ -255,7 +274,7 @@ void exclusao(tipoNoA **noAtual, int index){
 		else if ((excluido->dir != NULL) && (excluido->esq!=NULL)) // se tiver dois filhos (escolhi trocar pelo antecessor e nao pelo sucessor)
 		{
 			aux = antecessor ((excluido));
-			if ((excluido)->pai !=NULL) //se não for exclusao da raiz
+			if ((excluido)->pai !=NULL) //se não for exclusaoA da raiz
 			{
 				if (excluido->pai->dir == excluido) //excluido for filho da direita
 				{
@@ -300,7 +319,7 @@ void exclusao(tipoNoA **noAtual, int index){
 					}
 				}
 
-			} else{ //exclusao da raiz
+			} else{ //exclusaoA da raiz
 				if ((excluido)->esq == aux) //caso antecessor seja filho direto
 				{
 					aux->pai = NULL;
@@ -341,7 +360,7 @@ int insercaoB (tipoNoA **noAtual){
 			int valor = atoi(num);
 			valores[j]=valor;
 			index = index + valor;
-			printf("valor: %d\n",valor );
+			printf("inserido: %d\n",valor );
 			i=0;
 			j++;
 		}
@@ -363,22 +382,72 @@ int insercaoB (tipoNoA **noAtual){
 
 }
 
-void lerArq(tipoNoA **noAtual){
-	char c, f = feof (stdin);
+void exclusaoB(tipoNoA **noAtual){
+	printf("REMOÇÃO\n");
+	// int index = 0, i=0,j=0, valores[100];
+	// char c = getchar ()/*ler espaço*/, f = feof (stdin),num[8];
+	// f = feof (stdin); //verifica se é o final do arquivo
+	// tipoNoA *novoNo;
+	// while ((c!='\n')&& (!f)){ //enquanto nao for proxima instrução nem final do arquivo
+	// 	c = getchar (); 
 
-	while (!f){
+	// 	if((c!= '(' ) && (c!=')') && (c!= '\n')){ //se nao for parenteses nem quebra de linha
+	// 		num[i]=c;
+	// 		i++;
+	// 	} else if (((c=='(')||(c==')')) && (i!=0)){ //se for parenteses E nao for inicio da leitura da subArvore (i!=0)
+	// 		num[i]='\0';
+	// 		int valor = atoi(num);
+	// 		valores[j]=valor;
+	// 		index = index + valor;
+	// 		i=0;
+	// 		j++;
+	// 	}
+	// 	f = feof (stdin);
+	// }
+	// valores[j]=0;
+	// j=0;
+	// novoNo = buscaA((*noAtual),index);
+	// tipoNoB *encontrado;
+	// encontrado = (buscaB(novoNo->arvSec,valores[0]));
+	// j++;
+	// while ((valores[j]!= 0) && (encontrado->chave)){
+	// 	encontrado = (buscaB(novoNo->arvSec,valores[j]));
+	// 	j++;
+	// }
+
+	// if ((valores[j]==0)&&(encontrado->chave))
+	// {
+	// 	free(*noAtual);
+	// }
+
+	// j=0;
+
+}
+void lerArq(tipoNoA **noAtual){
+	char c='\0', f = feof (stdin);
+
+	while ((!f)){
 		c = getchar (); //identifica qual é a instrução da vez
 		f = feof (stdin); //analisa se ja é fim de arquivo
 
 		switch(c){
 			case 'i':
 				insercaoB(noAtual);
+				printf("\nimpressao da arvore:\n");
+				imprimirEmOrdemA(*noAtual);
+				printf("\n");
 			break;
 			case 'b':
-				printf("busca\n");
+				printf("buscaA\n");
+				printf("\nimpressao da arvore:\n");
+				imprimirEmOrdemA(*noAtual);
+				printf("\n");
 			break;
 			case 'r':
-				printf("remoção\n");		
+				exclusaoB(noAtual);
+				printf("\nimpressao da arvore:\n");
+				imprimirEmOrdemA(*noAtual);
+				printf("\n");
 			break;
 		}
 	}
@@ -421,7 +490,7 @@ int main(int argc, char const *argv[])
 	// //altura
 	// // printf("altura: %d\n", altura(raiz));
 
-	// //busca
+	// //buscaA
 	// // printf("voce deseja buscar algum valor?\n");
 	// scanf("%d",&buscar);
 	// tipoNoA *encontrado;
@@ -429,7 +498,7 @@ int main(int argc, char const *argv[])
 	// 	// printf("voce deseja buscar qual valor?\n");
 	// 	scanf("%d",&valor);
 
-	// 	encontrado = busca(raiz,valor);
+	// 	encontrado = buscaA(raiz,valor);
 	// 	if (encontrado!=NULL){
 	// 		// printf("valor %d encontrado\n",encontrado->index );
 	// 	}else{
@@ -448,14 +517,11 @@ int main(int argc, char const *argv[])
 	// printf("\nimpressao da arvore pré exclusão:\n");
 	// imprimirEmOrdemA(raiz);
 	// printf("\n");
-	// // printf("nó excluido: %d\n",(exclusao(raiz)).index );;
+	// // printf("nó excluido: %d\n",(exclusaoA(raiz)).index );;
 	// int excluir = 6;
 	// printf("excluir: %d\n",excluir );
-	// exclusao(&raiz,excluir);
+	// exclusaoA(&raiz,excluir);
 	// return 0;
 
 	lerArq(&raiz);
-	printf("\nimpressao da arvore:\n");
-	imprimirEmOrdemA(raiz);
-	printf("\n");
 }
