@@ -69,16 +69,16 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 		}
 	}
 }
-void imprimirEmOrdemB( tipoNoA *noAtual, tipoNoB *subArvore){
+void imprimirEmOrdemB( tipoNoA *noAtual){
 
 }
-void imprimirEmOrdemA( tipoNoA *noAtual, tipoNoB *subArvore){
+void imprimirEmOrdemA( tipoNoA *noAtual){
 	if (noAtual!=NULL)
 	{
 		imprimirEmOrdemA(noAtual->esq);
 		printf(" %d ",noAtual->index );
-		
-		
+
+
 		imprimirEmOrdemA(noAtual->dir);
 	}
 }
