@@ -25,30 +25,28 @@ typedef struct tipoNoA
 	struct tipoNoA *pai;
 	struct tipoNoA *esq;
 	struct tipoNoA *dir;
-	int chave;
 	int index;
 	struct tipoNoB *arvSec;
 }tipoNoA;
 
-tipoNoA *incluiA(int chave, tipoNoA **noAtual, tipoNoA *pai, int index){
+tipoNoA *incluiA(int index, tipoNoA **noAtual, tipoNoA *pai){
 	if (*noAtual==NULL)
 	{
 		(*noAtual) = (tipoNoA*)(malloc (sizeof(tipoNoA)));
 		(*noAtual)->pai = pai;
 		(*noAtual)->esq = NULL;
 		(*noAtual)->dir = NULL;
-		(*noAtual)->chave = chave;
 		(*noAtual)->index = index;
-		// printf("inseri chave %d\n",(*noAtual)->chave );
-		// printf("pai: %d\n",(*noAtual)->pai->chave);
+		// printf("inseri index %d\n",(*noAtual)->index );
+		// printf("pai: %d\n",(*noAtual)->pai->index);
 		return (*noAtual);
 	}
 	else {
-		if (chave <= (*noAtual)->chave){
-			incluiA(chave,&((*noAtual)->esq) , (*noAtual), index);
+		if (index <= (*noAtual)->index){
+			incluiA(index,&((*noAtual)->esq) , (*noAtual));
 		} 
 		else {
-			incluiA(chave,&((*noAtual)->dir),(*noAtual), index);
+			incluiA(index,&((*noAtual)->dir),(*noAtual));
 		}
 	}
 }
@@ -71,31 +69,20 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 		}
 	}
 }
-
 void imprimirEmOrdemB( tipoNoB *noAtual){
 	if (noAtual!=NULL)
 	{
-		printf("(");
-		printf("%d",noAtual->index );
-		if ((noAtual->esq == NULL) && (noAtual->dir != NULL))
-		{
-			printf("()");
-		}
 		imprimirEmOrdemB(noAtual->esq);
-		if ((noAtual->dir == NULL) && (noAtual->esq != NULL))
-		{
-			printf("()");
-		}
+		printf(" %d ",noAtual->index );
 		imprimirEmOrdemB(noAtual->dir);
-		printf(")");
 	}
 }
 void imprimirEmOrdemA( tipoNoA *noAtual){
 	if (noAtual!=NULL)
 	{
 		imprimirEmOrdemA(noAtual->esq);
+		printf(" %d :",noAtual->index );
 		imprimirEmOrdemB(noAtual->arvSec);
-		printf(" : %d ",noAtual->index );
 		printf("\n");
 		imprimirEmOrdemA(noAtual->dir);
 	}
@@ -349,7 +336,7 @@ int insercaoB (tipoNoA **noAtual){
 	}
 	valores[j]=0;
 	j=0;
-	novoNo = incluiA(valores[0],noAtual, NULL,index);
+	novoNo = incluiA(index,noAtual, NULL);
 
 	while (valores[j]!= 0){
 		incluiB(valores[j],&(novoNo)->arvSec);
