@@ -72,8 +72,8 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 void imprimirEmOrdemB( tipoNoB *noAtual){
 	if (noAtual!=NULL)
 	{
+		printf("(%d)",noAtual->index );
 		imprimirEmOrdemB(noAtual->esq);
-		printf(" %d ",noAtual->index );
 		imprimirEmOrdemB(noAtual->dir);
 	}
 }
@@ -81,8 +81,8 @@ void imprimirEmOrdemA( tipoNoA *noAtual){
 	if (noAtual!=NULL)
 	{
 		imprimirEmOrdemA(noAtual->esq);
-		printf(" %d :",noAtual->index );
 		imprimirEmOrdemB(noAtual->arvSec);
+		printf(" : %d ",noAtual->index );
 		printf("\n");
 		imprimirEmOrdemA(noAtual->dir);
 	}
@@ -336,7 +336,7 @@ int insercaoB (tipoNoA **noAtual){
 	}
 	valores[j]=0;
 	j=0;
-	novoNo = incluiA(index,noAtual, NULL);
+	novoNo = incluiA(valores[0],noAtual, NULL);
 
 	while (valores[j]!= 0){
 		incluiB(valores[j],&(novoNo)->arvSec);
