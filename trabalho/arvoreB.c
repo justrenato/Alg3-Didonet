@@ -69,12 +69,17 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 		}
 	}
 }
-void imprimirEmOrdem( tipoNoA *noAtual, tipoNoB *subArvore){
+void imprimirEmOrdemB( tipoNoA *noAtual, tipoNoB *subArvore){
+
+}
+void imprimirEmOrdemA( tipoNoA *noAtual, tipoNoB *subArvore){
 	if (noAtual!=NULL)
 	{
-		imprimirEmOrdem(noAtual->esq);
+		imprimirEmOrdemA(noAtual->esq);
 		printf(" %d ",noAtual->index );
-		imprimirEmOrdem(noAtual->dir);
+		
+		
+		imprimirEmOrdemA(noAtual->dir);
 	}
 }
 int altura(tipoNoA *noAtual){
@@ -393,7 +398,7 @@ int main(int argc, char const *argv[])
 
 	// //impressão
 	// printf("\nimpressao da arvore:\n");
-	// imprimirEmOrdem(raiz);
+	// imprimirEmOrdemA(raiz);
 	// printf("\n");
 	// //altura
 	// // printf("altura: %d\n", altura(raiz));
@@ -423,7 +428,7 @@ int main(int argc, char const *argv[])
 	// // printf("sucessor da arvore: %d\n",(sucessor(raiz))->index);
 
 	// printf("\nimpressao da arvore pré exclusão:\n");
-	// imprimirEmOrdem(raiz);
+	// imprimirEmOrdemA(raiz);
 	// printf("\n");
 	// // printf("nó excluido: %d\n",(exclusao(raiz)).index );;
 	// int excluir = 6;
@@ -433,6 +438,6 @@ int main(int argc, char const *argv[])
 
 	lerArq(&raiz);
 	printf("\nimpressao da arvore:\n");
-	imprimirEmOrdem(raiz);
+	imprimirEmOrdemA(raiz);
 	printf("\n");
 }
