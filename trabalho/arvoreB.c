@@ -69,16 +69,21 @@ tipoNoB *incluiB(int index, tipoNoB **noAtual){
 		}
 	}
 }
-void imprimirEmOrdemB( tipoNoA *noAtual){
-
+void imprimirEmOrdemB( tipoNoB *noAtual){
+	if (noAtual!=NULL)
+	{
+		imprimirEmOrdemB(noAtual->esq);
+		printf(" %d ",noAtual->index );
+		imprimirEmOrdemB(noAtual->dir);
+	}
 }
 void imprimirEmOrdemA( tipoNoA *noAtual){
 	if (noAtual!=NULL)
 	{
 		imprimirEmOrdemA(noAtual->esq);
-		printf(" %d ",noAtual->index );
-
-
+		printf(" %d :",noAtual->index );
+		imprimirEmOrdemB(noAtual->arvSec);
+		printf("\n");
 		imprimirEmOrdemA(noAtual->dir);
 	}
 }
