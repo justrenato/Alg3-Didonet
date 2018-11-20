@@ -136,25 +136,33 @@ tipoNoA *buscaA(tipoNoA *noAtual, int valor){
 		return encontrado;
 	}
 }
-tipoNoA *buscaB(tipoNoA *noAtual, int valor){
-	tipoNoA *encontrado;
-	if (noAtual==NULL)	
-	{
-		return NULL;
-	}else
-	if (valor < noAtual->chave)
-	{
-		encontrado = buscaB(noAtual->esq, valor);
-		return encontrado;
-	} else
-	if (noAtual->chave == valor)
-	{
-		return noAtual;
-	} else
-	if (valor > noAtual->chave){
-		encontrado = buscaB(noAtual->dir,valor);
-		return encontrado;
+void lerInst(int valores[], int *j, int *index){
+	int i=0;
+	char c = getchar ()/*ler espaço*/, f = feof (stdin),num[8];
+	f = feof (stdin); //verifica se é o final do arquivo
+	tipoNoA *novoNo;
+	while ((c!='\n')&& (!f)){ //enquanto nao for proxima instrução nem final do arquivo
+		c = getchar (); 
+
+		if((c!= '(' ) && (c!=')') && (c!= '\n')){ //se nao for parenteses nem quebra de linha
+			num[i]=c;
+			i++;
+		} else if (((c=='(')||(c==')')) && (i!=0)){ //se for parenteses E nao for inicio da leitura da subArvore (i!=0)
+			num[i]='\0';
+			int valor = atoi(num);
+			valores[(*j)]=valor;
+			*index = *index + valor;
+			// printf("inserido: %d\n",valor );
+			i=0;
+			(*j)++;
+		}
+		f = feof (stdin);
 	}
+	valores[(*j)]=0;
+}
+
+tipoNoA *buscaB(tipoNoA *noAtual, int index){
+	printf("ta foda ;/\n");
 }
 tipoNoA *minimo(tipoNoA *noAtual){
 	if (noAtual->esq == NULL)
@@ -345,28 +353,10 @@ void exclusaoA(tipoNoA **noAtual, int index){
 }
 
 int insercaoB (tipoNoA **noAtual){
-	int index = 0, i=0,j=0, valores[100];
-	char c = getchar ()/*ler espaço*/, f = feof (stdin),num[8];
-	f = feof (stdin); //verifica se é o final do arquivo
+	int index = 0, j=0,valores[100];
 	tipoNoA *novoNo;
-	while ((c!='\n')&& (!f)){ //enquanto nao for proxima instrução nem final do arquivo
-		c = getchar (); 
 
-		if((c!= '(' ) && (c!=')') && (c!= '\n')){ //se nao for parenteses nem quebra de linha
-			num[i]=c;
-			i++;
-		} else if (((c=='(')||(c==')')) && (i!=0)){ //se for parenteses E nao for inicio da leitura da subArvore (i!=0)
-			num[i]='\0';
-			int valor = atoi(num);
-			valores[j]=valor;
-			index = index + valor;
-			printf("inserido: %d\n",valor );
-			i=0;
-			j++;
-		}
-		f = feof (stdin);
-	}
-	valores[j]=0;
+	lerInst(valores, &j, &index);
 	j=0;
 	novoNo = incluiA(valores[0],noAtual, NULL,index);
 
@@ -379,38 +369,37 @@ int insercaoB (tipoNoA **noAtual){
 	printf("index: %d\n",index);
 	printf("\n");
 	return index;
-
 }
 
 void exclusaoB(tipoNoA **noAtual){
 	printf("REMOÇÃO\n");
-	int index = 0, i=0,j=0, valores[100];
-	char c = getchar ()/*ler espaço*/, f = feof (stdin),num[8];
-	f = feof (stdin); //verifica se é o final do arquivo
-	tipoNoA *novoNo;
-	while ((c!='\n')&& (!f)){ //enquanto nao for proxima instrução nem final do arquivo
-		c = getchar (); 
+	// int index = 0, i=0,j=0, valores[100];
+	// char c = getchar ()/*ler espaço*/, f = feof (stdin),num[8];
+	// f = feof (stdin); //verifica se é o final do arquivo
+	// tipoNoA *novoNo;
+	// while ((c!='\n')&& (!f)){ //enquanto nao for proxima instrução nem final do arquivo
+	// 	c = getchar (); 
 
-		if((c!= '(' ) && (c!=')') && (c!= '\n')){ //se nao for parenteses nem quebra de linha
-			num[i]=c;
-			i++;
-		} else if (((c=='(')||(c==')')) && (i!=0)){ //se for parenteses E nao for inicio da leitura da subArvore (i!=0)
-			num[i]='\0';
-			int valor = atoi(num);
-			/*COLOCAR AQUI BUSCAB COM VALOR CALCULADO NA LINHA DE CIMA*/
-			/*E SE A ARVORE TIVER TODOS OS NÓS BUSCADO REMOVE ELA*/
-			valores[j]=valor;
-			index = index + valor;
-			i=0;
-			j++;
-		}
-		f = feof (stdin);
-	}
+	// 	if((c!= '(' ) && (c!=')') && (c!= '\n')){ //se nao for parenteses nem quebra de linha
+	// 		num[i]=c;
+	// 		i++;
+	// 	} else if (((c=='(')||(c==')')) && (i!=0)){ //se for parenteses E nao for inicio da leitura da subArvore (i!=0)
+	// 		num[i]='\0';
+	// 		int valor = atoi(num);
+	// 		/*COLOCAR AQUI BUSCAB COM VALOR CALCULADO NA LINHA DE CIMA*/
+	// 		/*E SE A ARVORE TIVER TODOS OS NÓS BUSCADO REMOVE ELA*/
+	// 		valores[j]=valor;
+	// 		index = index + valor;
+	// 		i=0;
+	// 		j++;
+	// 	}
+	// 	f = feof (stdin);
+	// }
 
-	valores[j]=0;
-	j=0;
-	novoNo = buscaA((*noAtual),index);
-	tipoNoB *encontrado;
+	// valores[j]=0;
+	// j=0;
+	// novoNo = buscaA((*noAtual),index);
+	// tipoNoB *encontrado;
 	// encontrado = (buscaB(novoNo->arvSec,valores[0]));
 	// j++;
 	// while ((valores[j]!= 0) && (encontrado->chave)){
@@ -428,6 +417,7 @@ void exclusaoB(tipoNoA **noAtual){
 }
 void lerArq(tipoNoA **noAtual){
 	char c='\0', f = feof (stdin);
+	int index = 0, j=0,valores[100];
 
 	while ((!f)){
 		c = getchar (); //identifica qual é a instrução da vez
@@ -441,16 +431,17 @@ void lerArq(tipoNoA **noAtual){
 				printf("\n");
 			break;
 			case 'b':
-				
-				printf("\nimpressao da busca:\n");
-				imprimirEmOrdemB((buscaB(*noAtual,11))->arvSec);
+				index = 0, j=0;
+				lerInst(valores, &j, &index);
+				printf("\nimpressao da busca por %d:\n",index);
+				buscaB(*noAtual, index);
 				printf("\n");
 			break;
 			case 'r':
-				// exclusaoB(noAtual);
-				printf("\nimpressao da arvore:\n");
-				imprimirEmOrdemA(*noAtual);
-				printf("\n");
+				exclusaoB(noAtual);
+				// printf("\nimpressao da arvore:\n");
+				// imprimirEmOrdemA(*noAtual);
+				// printf("\n");
 			break;
 		}
 	}
