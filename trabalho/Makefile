@@ -1,13 +1,13 @@
-all: arvoreB.c
+all: busca
 
 busca: arvoreB.o funcs.o
-	gcc arvoreB.o funcs.o -o busca -g -Wall
+	gcc arvoreB.o funcs.o -o busca -g
 
 arvoreB.o: arvoreB.c arvoreB.h
-	gcc -c arvoreB.c -o arvoreB.o -g -Wall
+	gcc -c arvoreB.c -o arvoreB.o -g
 
 funcs.o: funcs.c arvoreB.h
-	gcc -c funcs.c -o funcs.o -g -Wall
+	gcc -c funcs.c -o funcs.o -g
 
 	
 clean:
